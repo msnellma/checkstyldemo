@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Java CI with Maven and Checkstyle
 
 on:
   push:
@@ -31,9 +31,16 @@ jobs:
     - name: Test with Maven and run Checkstyle
       run: mvn -B test
     
-    - name: Upload Checkstyle Report
+    - name: Upload Checkstyle XML Report
       if: always()  # This ensures the step runs even if previous steps fail
       uses: actions/upload-artifact@v4.4.3
       with:
         name: checkstyle-report
         path: target/checkstyle-result.xml
+
+    - name: Upload Checkstyle HTML Report
+      if: always()
+      uses: actions/upload-artifact@v4.4.3
+      with:
+        name: checkstyle-report-html
+        path: target/reports/checkstyle.html
