@@ -36,12 +36,17 @@ jobs:
       - name: Test with Maven and run Checkstyle
         run: mvn -B test 
 
-      - name: upload artifacts
+      - name: upload checkstyle artifacts
         if: always()
         uses: actions/upload-artifact@v4.4.3
         with:
           name: checkstyle-report # Name artifact tor reference later
           path: target/reports/checkstyle.html
+
+      - name: upload pages artifacts
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: target/reports
 
       - name: deploy
         id: deployment
