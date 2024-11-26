@@ -51,3 +51,10 @@ jobs:
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@v4.0.5
+
+      # debug
+      - name: debug checkstyle artifacts
+        run: ls -R target/reports
+
+      - name: Log deployment URL
+        run: echo ${{ steps.deployment.page_url }}
