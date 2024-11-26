@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  test-and-checkstyle:
 
     runs-on: ubuntu-latest
 
@@ -36,3 +36,40 @@ jobs:
       with:
         name: checkstyle-report-html
         path: target/reports/checkstyle.html
+
+  deploy-checkstyle-html:
+    needs: test-and-checkstyle
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    environment:
+      name: production
+      url: ${{ steps.deployment.page_url }} # references step with id: deployment
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4.2.2
+        with: 
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: Test with Maven and run Checkstyle
+        run: mvn -B test 
+
+      - name: upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          path: target/reports/checkstyle.html
+
+      - name: deploy
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
