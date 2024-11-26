@@ -36,11 +36,11 @@ jobs:
       - name: Test with Maven and run Checkstyle
         run: mvn -B test 
 
-      - name: upload checkstyle artifacts
-        uses: actions/upload-artifact@v4.4.3
-        with:
-          name: checkstyle-report # Optional, name artifact tor reference later. Not used
-          path: target/reports/checkstyle.html
+      # - name: upload checkstyle artifacts
+      #   uses: actions/upload-artifact@v4.4.3
+      #   with:
+      #     name: checkstyle-report # Optional, name artifact tor reference later. Not used
+      #     path: target/reports/checkstyle.html
 
       # required for upload-pages that expects index.html in the path
       - name: rename checkstyle.html to index.html
