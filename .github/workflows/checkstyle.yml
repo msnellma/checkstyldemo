@@ -37,12 +37,15 @@ jobs:
         run: mvn -B test 
 
       - name: upload checkstyle artifacts
-        if: always()
         uses: actions/upload-artifact@v4.4.3
         with:
-          name: checkstyle-report # Name artifact tor reference later
+          name: checkstyle-report # Optional, name artifact tor reference later. Not used
           path: target/reports/checkstyle.html
 
+      # required for upload-pages that expects index.html in the path
+      - name: rename checkstyle.html to index.html
+        run: mv target/reports/checkstyle.html target/reports/index.html
+        
       - name: upload pages artifacts
         uses: actions/upload-pages-artifact@v3.0.1
         with:
@@ -51,10 +54,3 @@ jobs:
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@v4.0.5
-
-      # debug
-      - name: debug checkstyle artifacts
-        run: ls -R target/reports
-
-      - name: Log deployment URL
-        run: echo ${{ steps.deployment.page_url }}
